@@ -1,0 +1,44 @@
+name: Publish to GitHub Packages
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '8'
+          server-id: github
+      - name: Check release tag against POM version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+
+          tag = os.environ["RELEASE_TAG"]
+          version = ET.parse("pom.xml").findtext("{http://maven.apache.org/POM/4.0.0}version")
+          if not version or tag != version or version.endswith("-SNAPSHOT"):
+              raise SystemExit(f"Release tag {tag!r} must match a non-snapshot POM version (found {version!r}).")
+          PY
+      - name: Test and package
+        run: mvn --batch-mode --no-transfer-progress clean verify
+      - name: Deploy verified package
+        run: mvn --batch-mode --no-transfer-progress deploy -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

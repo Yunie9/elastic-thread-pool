@@ -31,8 +31,11 @@ public class ElasticRejectedExecutionHandler implements RejectedExecutionHandler
         BlockingQueue<Runnable> queue = pool.getQueue();
         if (queue instanceof EagerTaskQueue) {
             EagerTaskQueue eagerQueue = (EagerTaskQueue) queue;
-            if (eagerQueue.forceOffer(task)) {
-                return;
+            if (!pool.isShutdown() && eagerQueue.forceOffer(task)) {
+                // A shutdown may have raced with the queue insertion.
+                if (!pool.isShutdown() || !pool.remove(task)) {
+                    return;
+                }
             }
         }
         finalReject.rejectedExecution(task, pool);

@@ -16,9 +16,24 @@
 
 ## 📋 目录
 
+- [Maven 安装](#maven-安装)
 - [使用示例](#-使用示例)
 - [适用场景](#-适用场景)
 - [许可证](#-许可证)
+
+## Maven 安装
+
+添加依赖前，请先在 `pom.xml` 中配置仓库。 [Maven 仓库配置](MAVEN_zh.md)
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.github.Yunie9</groupId>
+        <artifactId>elastic-thread-pool</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+</dependencies>
+```
 
 ## 📖 使用示例
 

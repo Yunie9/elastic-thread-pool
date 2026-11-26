@@ -18,9 +18,24 @@ A high-performance elastic thread pool implementation that supports queue size-b
 
 ## 📋 Table of Contents
 
+- [Maven Installation](#maven-installation)
 - [Usage Examples](#-usage-examples)
 - [Applicable Scenarios](#-applicable-scenarios)
 - [License](#-license)
+
+## Maven Installation
+
+Configure a repository in your `pom.xml` before adding the dependency. [Maven repository setup](MAVEN.md)
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.github.Yunie9</groupId>
+        <artifactId>elastic-thread-pool</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+</dependencies>
+```
 
 ## 📖 Usage Examples
 
